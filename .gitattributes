@@ -1,0 +1,57 @@
+# Set default behavior for files
+* text=auto
+
+# Python files
+*.py text eol=lf
+*.pyx text eol=lf
+*.pxd text eol=lf
+
+# Documentation
+*.md text eol=lf
+*.txt text eol=lf
+*.rst text eol=lf
+
+# Configuration files
+*.yml text eol=lf
+*.yaml text eol=lf
+*.json text eol=lf
+*.toml text eol=lf
+*.ini text eol=lf
+*.cfg text eol=lf
+
+# Shell scripts
+*.sh text eol=lf
+*.bat text eol=crlf
+
+# Jupyter Notebooks
+*.ipynb linguist-detectable=true
+
+# Binary files (ensure they're not modified)
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.bmp binary
+*.tiff binary
+*.ico binary
+
+# Large data files
+*.h5 binary
+*.hdf5 binary
+*.pkl binary
+*.pickle binary
+*.npy binary
+*.npz binary
+
+# Model files
+*.bin binary
+*.model binary
+*.pt binary
+*.pth binary
+*.ckpt binary
+
+# Archives
+*.zip binary
+*.tar.gz binary
+*.rar binary
+*.7z binary
