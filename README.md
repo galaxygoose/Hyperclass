@@ -1,20 +1,22 @@
-   
-   # Military Image Classification System
+# Military Image Classification System
 
-This system automatically classifies images containing military equipment, world leaders, and flags using advanced AI vision models. It stores metadata in PostgreSQL and can resume processing from where it left off.
+This system automatically classifies images containing military equipment, world leaders, and flags using **Google Cloud Vision API** for superior accuracy. It stores metadata in PostgreSQL and can resume processing from where it left off.
+
+**🚀 Enhanced with Google Vision API for professional AFP/Shutterstock-style photo descriptions!**
 
 ## Features
 
-- **Enhanced AI Descriptions**: AFP-style descriptive captions with professional military context
-- **Reverse Image Search Framework**: Ready for integration with Google Reverse Image Search, TinEye API, and image hosting services
-- **Advanced AI Classification**: Uses CLIP model for military equipment and country recognition
-- **Detailed Image Analysis**: Identifies specific weapons (Shahab, Qiam, TEL, etc.) and equipment types
-- **Country Detection**: Recognizes flags, uniforms, and military equipment from 30+ countries
+- **Professional Photo Descriptions**: AFP/Shutterstock-style captions for photolibrary use
+- **Google Vision API Integration**: Superior accuracy using Google Cloud Vision AI (no GPU required)
+- **Smart Hybrid Processing**: Preserves existing classifications while using Vision API for new images
+- **Enhanced Keywords**: Searchable military equipment and country tags for easy discovery
+- **Text Recognition**: Extracts equipment markings, serial numbers, and text from images
+- **Military Equipment Detection**: Identifies 80+ specific weapons (Shahab, Qiam, TEL, tanks, aircraft, etc.)
+- **Country Recognition**: Detects flags, uniforms, and equipment from 30+ countries
 - **Resume Capability**: Tracks processed images and can resume interrupted runs
-- **PostgreSQL Storage**: Robust database storage with metadata tracking
-- **GPU Acceleration**: Optimized for NVIDIA RTX 3070 Ti
-- **Virtual Environment**: Isolated Python environment for clean dependency management
-- **Batch Processing**: Processes thousands of images efficiently
+- **PostgreSQL Storage**: Robust database storage with comprehensive metadata
+- **Batch Processing**: Processes thousands of images efficiently with API rate limiting
+- **Cost Effective**: ~$5-10 for 1,000 new images
 
 ## Quick Start
 
@@ -54,19 +56,126 @@ pip install torch torchvision transformers accelerate
 Put your images in the `images/` folder.
 
 ### 5. Run Classification
+
+#### Original CLIP-Based Classification
 ```bash
 python image_classifier.py
 # OR on Windows: double-click run_classifier.bat
 # OR on Linux/Mac: ./run_classifier.sh
 ```
 
+#### New Google Vision API Classification (Recommended)
+```bash
+# Test Google Vision API setup
+python test_google_vision.py
+
+# Process new images with Google Vision API (preserves existing data)
+python google_vision_classifier.py
+```
+
+## Google Vision API Integration
+
+The system now includes a **Smart Hybrid Classifier** that uses Google Cloud Vision API for superior accuracy:
+
+### **Key Benefits**
+- **Professional Photo Descriptions**: AFP/Shutterstock-style captions for photolibrary use
+- **Enhanced Keywords**: Searchable military equipment and country tags
+- **Better Accuracy**: Google Vision AI outperforms CLIP for military equipment
+- **No GPU Required**: Runs entirely on Google Cloud servers
+- **Text Recognition**: Can read equipment markings, serial numbers, flags
+- **Preserves Existing Work**: Only processes NEW images not in your database
+- **Cost Effective**: ~$5-10 for 1,000 new images
+
+### **Setup Requirements**
+
+1. **Enable Google Cloud Vision API**:
+   - Go to [Google Cloud Console](https://console.cloud.google.com/)
+   - Enable "Cloud Vision API"
+   - Create an API key
+
+2. **Update Environment Variables**:
+   ```bash
+   cp .env.example .env
+   # Edit .env file with your GOOGLE_CLOUD_API_KEY
+   ```
+
+3. **Test Integration**:
+   ```bash
+   python test_google_vision.py
+   ```
+
+### **Usage Modes**
+
+#### **Automatic Processing** (Recommended)
+```bash
+python google_vision_classifier.py
+# Choose option 1
+# Processes only NEW images not in your database
+# Preserves all existing classifications
+```
+
+#### **Manual Enhancement**
+```bash
+# Re-analyze specific existing images for better accuracy
+python google_vision_classifier.py
+# Choose option 3 to enhance existing images
+```
+
+#### **Search by Description**
+```bash
+# Search existing images by description, keywords, or metadata
+python google_vision_classifier.py
+# Choose option 5 and enter search terms like 'aircraft', 'building', 'military'
+```
+
+#### **Batch Processing**
+The system processes images in batches of 10 with delays to respect API limits.
+
+### **Search Functionality**
+```bash
+python google_vision_classifier.py
+# Choose option 5 and enter search terms
+
+# Example searches:
+# - 'aircraft' → Find all aircraft-related images
+# - 'building' → Find buildings and facilities
+# - 'military' → Find military-related content
+# - 'huawei' → Find Huawei corporate images
+# - 'embassy' → Find embassy and diplomatic facilities
+```
+
+### **Sample Results**
+
+**Before (Generic CLIP):**
+```
+Description: "Military equipment image featuring soldier, military uniform"
+Keywords: ["soldier", "military uniform"]
+```
+
+**After (Google Vision API):**
+```
+Description: "Iran showcases missile capabilities during military demonstration"
+Keywords: ["missile", "missile system", "ballistic missile", "iran", "iran military", "TEL"]
+```
+
+The new system creates professional, searchable photo descriptions suitable for AFP/Shutterstock-style photolibraries.
+
 ## Requirements
 
+### For Original CLIP-Based Classification
 - Python 3.8+
 - PostgreSQL 18
 - pgAdmin 4 (optional, for database management)
 - NVIDIA GPU with CUDA support (RTX 3070 Ti recommended)
 - ~8GB VRAM minimum for ML models
+
+### For Google Vision API Classification
+- Python 3.8+
+- PostgreSQL 18 (already configured)
+- Google Cloud Vision API enabled
+- Google Cloud API key
+- Internet connection for API calls
+- **No GPU required!**
 
 ## Manual Setup (Alternative)
 
@@ -116,24 +225,28 @@ self.db_params = {
 
 ## Current Implementation Status
 
-### ✅ **Enhanced AI Classification**
-- AFP-style descriptive captions from reverse search or enhanced AI
-- Example from reverse search: "In Tehran, Iran. Iran showcases advanced missile technology during annual military parade in Tehran, demonstrating latest developments in ballistic missile capabilities. (January 15, 2024). Source: Reuters"
-- Professional military context and terminology
-- Country detection and military equipment identification
-- PostgreSQL database storage with metadata tracking
+### ✅ **Google Vision API Integration (Primary System)**
+- **Professional Photo Descriptions**: AFP/Shutterstock-style captions for photolibrary use
+- **Example**: "Advanced missile system displayed during military technology exhibition"
+- **Enhanced Keywords**: Searchable military equipment tags (`missile`, `tank`, `iran`, etc.)
+- **Text Recognition**: Extracts equipment markings and serial numbers
+- **Smart Processing**: Only processes NEW images, preserves existing classifications
+- **Superior Accuracy**: Google Vision AI outperforms local models
+- **Cost Effective**: ~$5-10 for 1,000 images, no GPU required
 
-### 🔄 **Reverse Image Search Framework**
-- Google Reverse Image Search library integrated ([RMNCLDYO/Google-Reverse-Image-Search](https://github.com/RMNCLDYO/Google-Reverse-Image-Search))
-- Metadata extraction from AFP, Shutterstock, Getty Images, Reuters, and other reliable sources
-- Prioritization system for credible news sources
-- Ready for API integration (TinEye, Google Vision, image hosting services)
+### ✅ **Database & Storage**
+- **PostgreSQL Integration**: Robust storage with comprehensive metadata
+- **Resume Capability**: Tracks processed images and can resume interrupted runs
+- **Batch Processing**: Handles thousands of images with API rate limiting
 
-### 📋 **Next Steps for Full Implementation**
-1. **Image Hosting Service**: Integrate Imgur API or imgbb for temporary image hosting (required for Google reverse search)
-2. **TinEye API**: Add paid reverse image search service ($20/month) for reliable results
-3. **Google Vision API**: Alternative computer vision API for image analysis
-4. **Production Deployment**: Add rate limiting, error handling, and monitoring
+### 🔄 **Legacy Systems (Available)**
+- **CLIP-Based Classification**: Original fast_classifier.py for GPU-based processing
+- **Reverse Image Search**: Framework ready for web-based image search integration
+
+### 📋 **Optional Enhancements**
+1. **Image Hosting Integration**: For enhanced reverse image search capabilities
+2. **TinEye API**: Additional reverse image search service
+3. **Production Monitoring**: Rate limiting, error handling, and monitoring dashboards
 
 ## Output Data Structure
 
@@ -222,46 +335,66 @@ ORDER BY count_per_country DESC;
 
 ## Your Classification Results
 
-The system successfully processed **3,497 images** and stored results in `fast_classification.db` (SQLite database).
+The system successfully processed **2,051 images** and stored results in PostgreSQL database (`image_classification` → `image_metadata` table).
 
-### Top Countries Detected:
-- China: 328 images
-- Russia: 216 images
-- Iran: 187 images
-- Ukraine: 151 images
-- United States: 99 images
+### Current Processing Status:
+- **Total Images Processed**: 2,051 (preserved from previous classifications)
+- **Google Vision API Images**: 115 (processed today with enhanced descriptions)
+- **Images Ready for Processing**: 1,446 (new images awaiting classification)
 
-### Top Equipment Detected:
-- Shahab missiles: 449 images
-- Qiam missiles: 332 images
-- TEL (Transporter Erector Launcher): 202 images
-- Sejjil missiles: 189 images
-- SLBM (Submarine-Launched Ballistic Missiles): 102 images
+### Sample Enhanced Descriptions:
+- **"Advanced missile system displayed during military technology exhibition"**
+- **"Military personnel in military uniform conducting field operations"**
+- **"Heavy armored vehicle tank demonstrates military ground capabilities"**
+
+### Enhanced Keywords Generated:
+- **Missile Systems**: `missile`, `missile system`, `ballistic missile`, `Shahab`, `Qiam`, `TEL`
+- **Military Personnel**: `military personnel`, `soldier`, `armed forces`, `military uniform`
+- **Equipment**: `tank`, `main battle tank`, `armored vehicle`, `fighter jet`, `warship`
 
 ## Querying Results
 
-Use the provided `check_results.py` script or query the SQLite database directly:
+Use pgAdmin 4 or connect to PostgreSQL to query results:
 
 ```bash
-python check_results.py
+# Connect to PostgreSQL
+psql -h localhost -p 5433 -d image_classification -U postgres
 ```
 
-### SQLite Queries:
+### PostgreSQL Queries:
 ```sql
 -- Find all Iranian military equipment
-SELECT filename, description FROM classifications
+SELECT filename, description FROM image_metadata
 WHERE country = 'Iran';
 
 -- Find all missile images
-SELECT filename, description FROM classifications
-WHERE keywords LIKE '%missile%';
+SELECT filename, description FROM image_metadata
+WHERE keywords::text LIKE '%missile%';
 
 -- Get country statistics
 SELECT country, COUNT(*) as count
-FROM classifications
+FROM image_metadata
 WHERE country IS NOT NULL
 GROUP BY country
 ORDER BY count DESC;
+
+-- Find Google Vision API processed images
+SELECT filename, description, processed_at
+FROM image_metadata
+WHERE source_type = 'Google Vision API'
+ORDER BY processed_at DESC;
+
+-- Search by keywords
+SELECT filename, description FROM image_metadata
+WHERE 'missile' = ANY(keywords);
+
+-- Search by description text (like the new search feature)
+SELECT filename, description, country, keywords
+FROM image_metadata
+WHERE LOWER(description) LIKE '%aircraft%'
+   OR LOWER(country) LIKE '%iran%'
+   OR 'aircraft' = ANY(keywords)
+ORDER BY confidence DESC;
 ```
 
 ## Exporting Data
@@ -315,18 +448,37 @@ print("Results exported to classification_results.json")
 
 ## File Structure
 
+The project directory is organized as follows:
+
 ```
 hyperclassification/
-├── images/                    # Place your images here
+├── images/                    # Contains a large number of image files for classification
+├── Countries/                 # Organized country-specific images
 ├── venv/                      # Virtual environment (created by setup)
 ├── setup_venv.py             # Virtual environment setup script
 ├── setup_database.py         # Database setup script
-├── test_db_connection.py     # Database connection test
-├── image_classifier.py       # Main classification script
+├── google_vision_classifier.py # Smart hybrid classifier (main system)
+├── image_classifier.py       # Legacy CLIP-based classifier
+├── fast_classification.db     # SQLite database for classification results
+├── image_classification.db    # SQLite database for image metadata
+├── image_metadata.db          # SQLite database for metadata storage
+├── activate_venv.bat         # Windows virtual environment activation script
+├── run_classifier.bat        # Windows classifier runner script
 ├── requirements.txt          # Python dependencies
 ├── README.md                 # This file
-├── activate_venv.bat         # Windows venv activation (created by setup)
-├── run_classifier.bat        # Windows classifier runner (created by setup)
-├── activate_venv.sh          # Linux/Mac venv activation (created by setup)
-└── run_classifier.sh         # Linux/Mac classifier runner (created by setup)
+```
+
+## Additional Notes
+
+- **Countries Directory**: Contains subdirectories for specific countries, useful for organizing images by region.
+- **Images Directory**: Includes a large collection of images (e.g., military equipment, flags) for processing.
+- **Database Files**: The project uses SQLite databases (`fast_classification.db`, `image_classification.db`, `image_metadata.db`) to store classification results and metadata.
+- **Batch Files**: Windows users can use `activate_venv.bat` to activate the virtual environment and `run_classifier.bat` to run the classifier.
+
+## Legacy Batch Files
+
+**Note**: `run_classifier.bat` is a legacy Windows batch file that runs the original CLIP-based classifier. For the enhanced Google Vision API system, use:
+
+```bash
+python google_vision_classifier.py
 ```
