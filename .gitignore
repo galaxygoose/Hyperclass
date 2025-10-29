@@ -50,9 +50,8 @@ classification_results.json
 export_results.py
 query_results.py
 
-# Images Directory (contains 3497 files - too large for git)
-images/
-Countries/
+# Images are now tracked with Git LFS for efficient storage
+# See .gitattributes for LFS tracking patterns
 
 # Logs
 *.log
