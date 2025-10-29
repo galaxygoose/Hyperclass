@@ -1,147 +1,193 @@
-Image Classification System
+Military Image Classification System
 
-This system automatically classifies images containing military equipment, world leaders, and flags using **Google Cloud Vision API** for superior accuracy. It stores metadata in PostgreSQL and can resume processing from where it left off.
+This system automatically classifies images containing military equipment, personnel, installations, and flags using **Google Cloud Vision API** for superior accuracy. It generates professional AFP/Shutterstock-style photo descriptions, searchable keywords, and stores comprehensive metadata in PostgreSQL.
 
-**🚀 Enhanced with Google Vision API for professional AFP/Shutterstock-style photo descriptions!**
+**🚀 Professional Photo Library System with Web Enhancement & Smart Re-analysis!**
 
 ## Features
 
-- **Professional Photo Descriptions**: AFP/Shutterstock-style captions for photolibrary use
-- **Google Vision API Integration**: Superior accuracy using Google Cloud Vision AI (no GPU required)
-- **Smart Hybrid Processing**: Preserves existing classifications while using Vision API for new images
-- **Enhanced Keywords**: Searchable military equipment and country tags for easy discovery
-- **Text Recognition**: Extracts equipment markings, serial numbers, and text from images
-- **Military Equipment Detection**: Identifies 80+ specific weapons (Shahab, Qiam, TEL, tanks, aircraft, etc.)
-- **Country Recognition**: Detects flags, uniforms, and equipment from 30+ countries
-- **Resume Capability**: Tracks processed images and can resume interrupted runs
-- **PostgreSQL Storage**: Robust database storage with comprehensive metadata
-- **Batch Processing**: Processes thousands of images efficiently with API rate limiting
-- **Cost Effective**: ~$5-10 for 1,000 new images
+- **🖼️ Professional Photo Descriptions**: AFP/Shutterstock-style captions using Google Vision AI
+- **🔍 Smart Re-analysis**: Update only descriptions/keywords, preserve all other metadata
+- **🌐 Web-Enhanced Analysis**: Scrapes alt-text and descriptions from matching web images
+- **🏷️ Enhanced Keywords**: 200+ searchable military equipment, personnel, and location tags
+- **📝 Text Recognition**: Extracts equipment markings, serial numbers, and contextual text
+- **🎯 Military Intelligence**: Identifies 150+ specific weapons, vehicles, and equipment types
+- **🇺🇳 Global Recognition**: Detects flags, uniforms, and insignia from 50+ countries/entities
+- **⏯️ Resume Capability**: Tracks processed images with timestamps for monitoring in pgAdmin
+- **🗄️ PostgreSQL Storage**: Robust database with comprehensive metadata schema
+- **⚡ Batch Processing**: Handles thousands of images with intelligent rate limiting
+- **💰 Cost Effective**: ~$5-10 for 1,000 images, no GPU required
+- **🔄 Archive Management**: Clean codebase with test/debug files organized in archive/
+- **🕵️ Reverse Image Search**: Framework for finding similar images across the web
 
 ## Quick Start
 
-### 1. Set up Virtual Environment
+### 1. Set up Environment
 ```bash
+# One-command setup: creates venv, installs deps, sets up database
 python setup_venv.py
 ```
 
-This will:
-- Create a virtual environment in `venv/`
-- Install basic dependencies (psycopg2, Pillow, etc.)
-- Test database connection
-- Set up database schema
-- Create activation shortcuts
+**What this does:**
+- Creates virtual environment in `venv/`
+- Installs all dependencies (Google Cloud, PostgreSQL, web scraping)
+- Sets up PostgreSQL database schema
+- Tests connections and creates activation scripts
 
-### 2. Activate Virtual Environment
-**Windows:**
+### 2. Configure Google Vision API
 ```bash
-# Double-click activate_venv.bat
-# OR
-venv\Scripts\activate.bat
+# 1. Get API key from Google Cloud Console
+# 2. Create .env file
+cp .env.example .env
+# Edit .env with your GOOGLE_CLOUD_API_KEY
 ```
 
-**Linux/Mac:**
+### 3. Place Images
+Put your images in the `images/` folder. The system supports:
+- **PNG, JPG, JPEG, GIF, BMP, WebP** formats
+- **Recursive folder scanning** (subdirectories supported)
+- **Automatic organization** by country in `Countries/` folder
+
+### 4. Process Images
+
+#### Primary Workflow: Smart Re-analysis (Recommended)
 ```bash
-source venv/bin/activate
-# OR
-./activate_venv.sh
+# Test analyzer on sample images first
+python reanalyze_all_images.py
+# Choose test batch, then proceed with full analysis
+
+# Full re-analysis of all images (updates only descriptions/keywords)
+python reanalyze_all_images.py
 ```
 
-### 3. Install ML Dependencies (Optional)
+#### Alternative: Individual Image Processing
 ```bash
-pip install torch torchvision transformers accelerate
+# Analyze single image with full web enhancement
+python -c "
+from google_vision_analyzer import GoogleVisionAnalyzer
+analyzer = GoogleVisionAnalyzer()
+result = analyzer.analyze_image('path/to/image.jpg')
+print(result)
+"
 ```
 
-### 4. Place Images
-Put your images in the `images/` folder.
+## Core System Architecture
 
-### 5. Run Classification
+### **Primary Components**
 
-#### Original CLIP-Based Classification
-```bash
-python image_classifier.py
-# OR on Windows: double-click run_classifier.bat
-# OR on Linux/Mac: ./run_classifier.sh
-```
+#### **`google_vision_analyzer.py`** - AI Analysis Engine
+- **Google Cloud Vision API integration** for comprehensive image analysis
+- **Web-enhanced descriptions** using reverse image search and web scraping
+- **Smart keyword generation** with 200+ military equipment mappings
+- **Context-aware processing** for military, political, and technical scenes
+- **Language filtering** to ensure English-only professional descriptions
 
-#### New Google Vision API Classification (Recommended)
-```bash
-# Test Google Vision API setup
-python test_google_vision.py
+#### **`reanalyze_all_images.py`** - Batch Processing Orchestrator
+- **Smart re-analysis** that updates only descriptions/keywords, preserves all other data
+- **Progress tracking** with timestamps for pgAdmin monitoring
+- **Test batch capability** for quality assurance before full runs
+- **Rate limiting** and error handling for reliable batch processing
+- **Database integration** with PostgreSQL for metadata storage
 
-# Process new images with Google Vision API (preserves existing data)
-python google_vision_classifier.py
-```
+#### **`web_scraper.py`** - Web Enhancement Module
+- **Alt-text extraction** from matching web images
+- **Description scraping** from image hosting sites
+- **Context enhancement** for better photo library descriptions
+- **Quality filtering** to reject generic or inappropriate content
 
-## Google Vision API Integration
+#### **`reverse_image_search.py`** - Web Discovery Framework
+- **Google Lens integration** for finding similar images online
+- **Source attribution** tracking for copyright and licensing
+- **Metadata enrichment** from web sources
+- **Reverse search capabilities** for duplicate detection
 
-The system now includes a **Smart Hybrid Classifier** that uses Google Cloud Vision API for superior accuracy:
+### **Smart Re-analysis Workflow**
 
-### **Key Benefits**
-- **Professional Photo Descriptions**: AFP/Shutterstock-style captions for photolibrary use
-- **Enhanced Keywords**: Searchable military equipment and country tags
-- **Better Accuracy**: Google Vision AI outperforms CLIP for military equipment
-- **No GPU Required**: Runs entirely on Google Cloud servers
-- **Text Recognition**: Can read equipment markings, serial numbers, flags
-- **Preserves Existing Work**: Only processes NEW images not in your database
-- **Cost Effective**: ~$5-10 for 1,000 new images
+The system uses an intelligent **re-analysis approach** that preserves your existing work:
+
+1. **Preserves All Existing Data**: Country classifications, source URLs, timestamps
+2. **Updates Only Descriptions**: Replaces generic CLIP descriptions with professional Vision AI captions
+3. **Enhances Keywords**: Adds searchable military equipment tags
+4. **Web Enhancement**: Pulls contextual information from matching web images
+5. **Quality Assurance**: Filters out generic descriptions, ensures English-only output
 
 ### **Setup Requirements**
 
-1. **Enable Google Cloud Vision API**:
-   - Go to [Google Cloud Console](https://console.cloud.google.com/)
-   - Enable "Cloud Vision API"
-   - Create an API key
+#### 1. **Google Cloud Vision API**
+```bash
+# Enable API in Google Cloud Console
+# Create service account and download key
+# Set environment variable
+export GOOGLE_CLOUD_API_KEY="your_api_key_here"
+```
 
-2. **Update Environment Variables**:
-   ```bash
-   cp .env.example .env
-   # Edit .env file with your GOOGLE_CLOUD_API_KEY
-   ```
+#### 2. **PostgreSQL Database**
+```bash
+# Install PostgreSQL 18+
+# Configure connection (default: localhost:5433)
+python setup_database.py
+```
 
-3. **Test Integration**:
-   ```bash
-   python test_google_vision.py
-   ```
+#### 3. **Python Environment**
+```bash
+python setup_venv.py  # Creates venv and installs all dependencies
+```
 
 ### **Usage Modes**
 
-#### **Automatic Processing** (Recommended)
+#### **Smart Re-analysis** (Primary Workflow)
 ```bash
-python google_vision_classifier.py
-# Choose option 1
-# Processes only NEW images not in your database
-# Preserves all existing classifications
+# Test on sample images first
+python reanalyze_all_images.py
+# Select test batch → verify quality → proceed with full analysis
+
+# Full re-analysis (updates descriptions/keywords only)
+python reanalyze_all_images.py
+# Preserves: countries, sources, timestamps, other metadata
+# Updates: descriptions, keywords, processed_at timestamp
 ```
 
-#### **Manual Enhancement**
+#### **Individual Image Analysis**
 ```bash
-# Re-analyze specific existing images for better accuracy
-python google_vision_classifier.py
-# Choose option 3 to enhance existing images
-```
-
-#### **Search by Description**
-```bash
-# Search existing images by description, keywords, or metadata
-python google_vision_classifier.py
-# Choose option 5 and enter search terms like 'aircraft', 'building', 'military'
+python -c "
+from google_vision_analyzer import GoogleVisionAnalyzer
+analyzer = GoogleVisionAnalyzer()
+result = analyzer.analyze_image('path/to/image.jpg')
+print(f'Description: {result[\"description\"]}')
+print(f'Keywords: {result[\"keywords\"]}')
+"
 ```
 
 #### **Batch Processing**
 The system processes images in batches of 10 with delays to respect API limits.
 
-### **Search Functionality**
-```bash
-python google_vision_classifier.py
-# Choose option 5 and enter search terms
+### **Search & Query Capabilities**
 
-# Example searches:
-# - 'aircraft' → Find all aircraft-related images
-# - 'building' → Find buildings and facilities
-# - 'military' → Find military-related content
-# - 'huawei' → Find Huawei corporate images
-# - 'embassy' → Find embassy and diplomatic facilities
+#### **PostgreSQL Queries**
+```sql
+-- Find images by military equipment
+SELECT filename, description FROM image_metadata
+WHERE 'missile' = ANY(keywords) OR LOWER(description) LIKE '%missile%';
+
+-- Find images by country
+SELECT filename, description FROM image_metadata
+WHERE country = 'Iran' OR country = 'Russia';
+
+-- Search by description content
+SELECT filename, description FROM image_metadata
+WHERE LOWER(description) LIKE '%fighter jet%' OR LOWER(description) LIKE '%aircraft%';
+
+-- Find recently processed images
+SELECT filename, description, processed_at FROM image_metadata
+WHERE processed_at > NOW() - INTERVAL '1 day'
+ORDER BY processed_at DESC;
+
+-- Get processing statistics
+SELECT country, COUNT(*) as image_count
+FROM image_metadata
+WHERE country IS NOT NULL
+GROUP BY country
+ORDER BY image_count DESC;
 ```
 
 ### **Sample Results**
@@ -160,22 +206,31 @@ Keywords: ["missile", "missile system", "ballistic missile", "iran", "iran milit
 
 The new system creates professional, searchable photo descriptions suitable for AFP/Shutterstock-style photolibraries.
 
-## Requirements
+## System Requirements
 
-### For Original CLIP-Based Classification
-- Python 3.8+
-- PostgreSQL 18
-- pgAdmin 4 (optional, for database management)
+### **Primary System (Google Vision API)**
+- **Python 3.8+**
+- **PostgreSQL 18+** (localhost:5433 default)
+- **Google Cloud Vision API** enabled with service account key
+- **Internet connection** for API calls
+- **No GPU required** - runs entirely on Google Cloud servers
+- **pgAdmin 4** (recommended for database management)
+
+### **Dependencies (Auto-installed by setup_venv.py)**
+```txt
+google-cloud-vision      # Google Vision API client
+psycopg2-binary          # PostgreSQL adapter
+requests                 # HTTP requests for web scraping
+beautifulsoup4           # HTML parsing
+Pillow                   # Image processing
+python-dotenv           # Environment variable management
+fake-useragent          # User agent rotation
+```
+
+### **Legacy System (CLIP-based - Archived)**
 - NVIDIA GPU with CUDA support (RTX 3070 Ti recommended)
 - ~8GB VRAM minimum for ML models
-
-### For Google Vision API Classification
-- Python 3.8+
-- PostgreSQL 18 (already configured)
-- Google Cloud Vision API enabled
-- Google Cloud API key
-- Internet connection for API calls
-- **No GPU required!**
+- torch, torchvision, transformers (auto-installed)
 
 ## Manual Setup (Alternative)
 
@@ -446,26 +501,42 @@ conn.close()
 print("Results exported to classification_results.json")
 ```
 
-## File Structure
-
-The project directory is organized as follows:
+## Project Structure
 
 ```
 hyperclassification/
-├── images/                    # Contains a large number of image files for classification
-├── Countries/                 # Organized country-specific images
-├── venv/                      # Virtual environment (created by setup)
-├── setup_venv.py             # Virtual environment setup script
-├── setup_database.py         # Database setup script
-├── google_vision_classifier.py # Smart hybrid classifier (main system)
-├── image_classifier.py       # Legacy CLIP-based classifier
-├── fast_classification.db     # SQLite database for classification results
-├── image_classification.db    # SQLite database for image metadata
-├── image_metadata.db          # SQLite database for metadata storage
-├── activate_venv.bat         # Windows virtual environment activation script
-├── run_classifier.bat        # Windows classifier runner script
-├── requirements.txt          # Python dependencies
-├── README.md                 # This file
+├── 📁 Core System Files
+│   ├── google_vision_analyzer.py    # 🧠 AI analysis engine (Google Vision API)
+│   ├── reanalyze_all_images.py      # 🔄 Batch re-analysis orchestrator
+│   ├── web_scraper.py              # 🕷️ Web enhancement & alt-text extraction
+│   └── reverse_image_search.py     # 🔍 Web discovery & reverse search framework
+│
+├── 📁 Setup & Configuration
+│   ├── setup_venv.py               # ⚙️ Virtual environment & dependency setup
+│   ├── setup_database.py           # 🗄️ PostgreSQL database initialization
+│   ├── requirements.txt            # 📦 Python dependencies
+│   └── .env.example               # 🔑 Environment variables template
+│
+├── 📁 Data & Images
+│   ├── images/                     # 🖼️ Main image collection (recursive scanning)
+│   ├── Countries/                  # 🌍 Auto-organized country-specific images
+│   └── *.db                        # 💾 SQLite/PostgreSQL database files
+│
+├── 📁 Archive (Test/Debug Files)
+│   ├── archive/                    # 📂 43+ archived test/debug scripts
+│   │   ├── test_*.py              # 🧪 Test scripts
+│   │   ├── debug_*.py             # 🔧 Debug utilities
+│   │   ├── check_*.py             # ✅ Validation scripts
+│   │   └── update_*.py            # 🔄 Update utilities
+│
+├── 📁 Documentation
+│   ├── README.md                   # 📖 This file
+│   ├── USER_GUIDE.md              # 📋 Detailed user guide
+│   └── git_setup.md               # 🐙 Git setup instructions
+│
+└── 📁 Environment
+    ├── venv/                      # 🐍 Virtual environment (auto-created)
+    └── query                      # ❓ Query file (miscellaneous)
 ```
 
 ## Additional Notes
