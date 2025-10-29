@@ -1,4 +1,4 @@
-# Military Image Classification System
+Image Classification System
 
 This system automatically classifies images containing military equipment, world leaders, and flags using **Google Cloud Vision API** for superior accuracy. It stores metadata in PostgreSQL and can resume processing from where it left off.
 
